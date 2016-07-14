@@ -1,0 +1,97 @@
+@font-face {
+	font-family: "pkmnem";
+	src: url('pkmnem.ttf');
+}
+body {
+	font-family: "Pokemon Emerald";
+	font-size: 16px;
+	background-color: #0C6;
+}
+#game {
+	border: 2px solid black;
+	width: 800px;
+	height: 600px;
+	background-color: white;
+}
+#playerHP, #oppoHP {
+	height: 5px;
+	width: 200px;
+	border: 2px solid black;
+	border-radius: 3px;
+	background-image: url(images/health.png);
+	background-color: white;
+}
+#playHold, #oppoHold {
+	border: 2px solid black;
+	padding: 10px;
+	width: 200px;
+	
+}
+#oppoHold {
+	margin-right: auto;
+	margin-left: 0;
+	border-right: none;
+	border-top: none;
+	height: 150px;
+	float:right;
+	background-color: #09F;
+}
+#playHold {
+	margin-top: 108px;
+	border-bottom: none;
+	border-left: none;
+	height: 175px;
+	margin-right: 0;
+	margin-left: auto;
+	float:left;
+	background-color: #F00;
+}
+#oppoSprite {
+	height: 260px;
+	width: 300px;
+	float: right;
+	margin-left: 5px;
+	margin-top: 35px;
+	margin-right: 170px;
+	z-index: 0;
+}
+#playerSprite {
+	height: 260px;
+	width: 300px;
+	float: right;
+ 	margin-right: 40px;
+    margin-top: -14px;
+	z-index: 1;
+}
+#gamestate {
+	width: 398px;
+	border: 2px solid black;
+	border-top: none;
+	height: 270px;
+	margin-top: 2px;
+	margin-left: -2px;
+	background-color: white;
+	float:right;
+}
+#gamestatehold {
+	margin: none;
+	border: none;
+	padding: 10px;
+}
+#options {
+	width: 400px;
+	height: 270px;
+	background-color: white;
+	border: 2px solid black;
+	border-top: none;
+	border-left: none;
+	margin-right: -2px;
+	margin-top: 2px;
+	float: left;
+}
+#jsConsole {
+	margin-left: 1000px;
+}
+#optionList, #fightlist {
+	list-style-type: none;
+}

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kwame & Huba Game</title>
+<link rel="stylesheet" href="style.css">
+<script language="javascript">
+
+
+var pokeMoves = {
+	cut: {
+		"name": "Cut",
+		"accuracy": 90,
+		"power": rand(15),
+		"stat": function (){
+		},
+		//"type": normal
+	},
+	screech: {
+		"name": "Screech",
+		"acurracy": 100,
+		"power": rand(14),
+		/*stat: function (pok){
+			var user;
+			var enemy;
+			if(pok === oppoPoke){
+				user = oppoPoke;
+				enemy = playerPoke;
+			} else {
+				user = playerPoke;
+				enemy = oppoPoke;
+			}
+			if(enemy.defense < Math.ceil(enemy.defense_total / 2)){
+				enemy.defense = Math.ceil(enemy.defense_total / 2);
+				gameState.log(enemy.name + "'s defense cannot go any lower.");
+			} else {
+				enemy.defense -= enemy.lvl / 5;
+				gameState.log(enemy.name + "'s defense was lowered.");
+			}
+		},*/
+		//type: normal
+	},
+	chomp: {
+		"name": "Chomp",
+		"accuracy": 90,
+		"power": rand(20),
+		"stat": function (){
+		},
+		//type: normal
+	},snort: {
+		"name": "Snort",
+		"accuracy": 100,
+		"power": rand(18),
+		//stat: function (pok){
+//			var user;
+//			var enemy;
+//			if(pok === oppoPoke){
+//				user = oppoPoke;
+//				enemy = playerPoke;
+//			} else {
+//				user = playerPoke;
+//				enemy = oppoPoke;
+//			}
+//			if(enemy.attack < Math.ceil(enemy.attack_total / 2)){
+//				gameState.log(enemy.name + "'s attack cannot go any lower.");
+//				enemy.attack = Math.ceil(enemy.attack_total / 2);
+//			} else {
+//				gameState.log(enemy.name + "'s attack was lowered.");
+//				enemy.attack -= enemy.lvl / 5;
+//			}
+//		},
+		//type: normal
+	},
+	water_shot: {
+		"name": "Water Shot",
+		"accuracy": 90,
+		"power": rand(18),
+		"stat": function (){
+		},
+		"type": "water"
+	},growl: {
+		"name": "Growl",
+		"accuracy": 100,
+		"power": false,
+		"stat": function (pok){
+			
+		},
+		//"type": "normal"
+	},
+	stomp: {
+		"name": "Stomp",
+		"accuracy": 90,
+		"power": 40,
+		"stat": function (){
+		},
+		//"type": normal
+	},
+	
+	poison_dart: {
+		"name": "Poison Dart",
+		"accuracy": 90,
+		"power": 55,
+		"stat": function (){
+		},
+		//"type": toxic
+	}
+	};
+
+
+
+/*
+ pokemons object creation, 2 parameters with name,attacks
+*/
+function pokemons(name,noofattacks,attacklevel,total_energy,moves,imageurl)
+{
+	this.name = name;
+	this.noofattacks = noofattacks;
+	this.attacklevel = attacklevel;
+	this.total_energy = total_energy;
+	this.current_energy = total_energy;
+	this.moves = moves;
+	this.imageurl = imageurl;
+}
+
+/*
+	initializing pokeman array object creation.
+*/
+var pokearray = new Array();
+function initializepokman() 
+{ 
+	/*
+		intialized the array pokesmans
+	*/
+	pokearray[0] = new pokemons("Pikachu",3,1,100,[pokeMoves.cut,pokeMoves.chomp,pokeMoves.growl]);
+	pokearray[1] = new pokemons("Arbok",3,1,100,[pokeMoves.cut,pokeMoves.screech,pokeMoves.poison_dart]);
+	pokearray[2] = new pokemons("Fearow",3,1,100,[pokeMoves.screech,pokeMoves.chomp,pokeMoves.growl]);
+	pokearray[3] = new pokemons("Beedrill",3,1,100,[pokeMoves.snort,pokeMoves.water_shot,pokeMoves.screech]);
+	pokearray[4] = new pokemons("Blastoise",3,1,100,[pokeMoves.screech,pokeMoves.water_shot,pokeMoves.poison_dart]);
+	pokearray[5] = new pokemons("Venusaur",3,1,100,[pokeMoves.chomp,pokeMoves.water_shot,pokeMoves.poison_dart]);
+	
+	
+}
+/*
+	select a pokemon from the list, its no to the array element
+*/
+function randomnogenerate(bottom, top)
+{
+	return Math.floor(Math.random() * (bottom - top + 1)) + top;
+}
+
+/*
+	show the user with randomly selected charactor from back
+*/
+var getpokeruser,getpokeropponent;
+var oppentkey,userkey;
+// initializing the charactor
+function initializeCharachtor(getrandomno)
+{
+	// since our array size is 5 and the number 
+	//var getrandomno = randomnogenerate(5,0);
+	//console.log(getrandomno)
+	
+	var getrandomnooppnent = randomnogenerate(5,0);
+	// check the same poker number is coming from the random if its true redo the genaration
+	while(getrandomno == getrandomnooppnent)
+	{
+		getrandomnooppnent = randomnogenerate(5,0);
+	}
+	
+	// get the poker names
+	//console.log(getrandomnooppnent)
+	getpokeruser = pokearray[getrandomno];
+	//console.log("getpokeruser >>"+ getpokeruser.name);
+	var appendstring = "";
+	for (x=0;x<getpokeruser.moves.length;x++)
+	{
+		appendstring += "<li><input type=\"button\" value=\""+getpokeruser.moves[x].name+"\" onclick=\"hitPoker("+x+")\"></li>";		
+	}
+	appendstring += "<li><input type=\"button\" value=\"<<<<Back\" onclick=\"backtofight()\"\"></li>";
+	document.getElementById("fightlist").innerHTML = appendstring;
+	
+	getpokeropponent = pokearray[getrandomnooppnent];
+//	console.log("getpokeropponent >>"+getpokeropponent.name);
+	
+	document.getElementById("playername").innerHTML = getpokeruser.name;
+	document.getElementById("opponentname").innerHTML = getpokeropponent.name;
+
+	
+	// seeting the images / its alt tag in the screen to display
+	playerSprite.setAttribute("src", "images/" + getpokeruser.name.toLowerCase() + ".jpg");
+	playerSprite.setAttribute("alt", getpokeruser.name);
+	playerSprite.setAttribute("title", getpokeruser.name);
+	playerSprite.setAttribute("height", "50px");
+	playerSprite.setAttribute("width", "60px");
+	oppoSprite.setAttribute("src", "images/" + getpokeropponent.name.toLowerCase() + ".jpg");
+	oppoSprite.setAttribute("alt", getpokeropponent.name);
+	oppoSprite.setAttribute("title", getpokeropponent.name);
+		oppoSprite.setAttribute("height", "50px");
+	oppoSprite.setAttribute("width", "60px");
+	
+}
+
+function damacalculate(atk_pokemon,def_pokemon,damagesize)
+{
+	
+	var move;
+	
+	if(typeof damagesize === "number"){
+		move = def_pokemon.moves[damagesize];
+	} else {
+		move = damagesize;
+	}
+	
+		var hit_energy = 0;
+		if(rand(100) > damagesize.accuracy){
+			hit_energy = 0;
+		}else{
+			hit_energy = damagesize.power
+		}
+		return def_pokemon.current_energy - hit_energy;
+		//return def_pokemon.current_energy;
+}
+
+/** 
+	this function will hits the oppenent
+*/
+var noofturns =1;
+var killed=false;
+
+var noofattempts =1;	
+function hitPoker(hittype)
+{
+//	selecting the user/ oppnent move
+	usermove = getpokeruser.moves[hittype];
+	usermove.power = rand(Math.floor(Math.random() * (20 - 5 + 1)) + 5);
+	oppentntmove = rand(getpokeropponent.moves );
+	oppentntmove.power = rand(Math.floor(Math.random() * (20 - 5 + 1)) + 5);
+	
+	tempuserenergy = getpokeruser.current_energy;
+	tempopponentenergy = getpokeropponent.current_energy;
+	// setting the balance energy for the poker
+	getpokeropponent.current_energy  =  damacalculate(getpokeruser,getpokeropponent,usermove);
+		getpokeruser.current_energy  =  damacalculate(getpokeropponent,getpokeruser,oppentntmove);
+	
+		// setting the  energy bar size
+	var q;
+	if(100 * (getpokeropponent.current_energy / getpokeropponent.total_energy) > 40){
+		q = 0;
+	} else if((100 * (getpokeropponent.current_energy / getpokeropponent.total_energy) <= 40) && (100 * (getpokeropponent.current_energy / getpokeropponent.total_energy) > 15)){
+		q = 5;
+	} else if(((getpokeropponent.current_energy / getpokeropponent.total_energy) <= 15)){
+		q = 10;
+	}
+	
+	document.getElementById("oppoHP").style.backgroundPosition = "-" + 2 * Math.round(100 - (100 * (getpokeropponent.current_energy / getpokeropponent.total_energy))) + "px -" + q + "px";
+	
+	
+	
+	// setting the  energy bar size
+	if(100 * (getpokeruser.current_energy / getpokeruser.total_energy) > 40){
+		q = 0;
+	} else if((100 * (getpokeruser.current_energy / getpokeruser.total_energy) <= 40) && (100 * (getpokeruser.current_energy / getpokeruser.total_energy) > 15)){
+		q = 5;
+	} else if(((getpokeruser.current_energy / getpokeruser.total_energy) <= 15)){
+		q = 10;
+	}
+	
+	document.getElementById("playerHP").style.backgroundPosition = "-" + 2 * Math.round(100 - (100 * (getpokeruser.current_energy / getpokeruser.total_energy))) + "px -" + q + "px";
+	
+	if(getpokeruser.current_energy <0)
+		getpokeruser.current_energy = 0;
+	if(getpokeropponent.current_energy <0)
+		getpokeropponent.current_energy =0;
+	
+	document.getElementById("opponentenergy").innerHTML = getpokeropponent.current_energy +"/" +getpokeropponent.total_energy;
+		document.getElementById("userenergy").innerHTML = getpokeruser.current_energy +"/" +getpokeruser.total_energy;
+	
+	
+	//getpokeropponent.noofhits += 1;
+	
+	var summaray = "<font color='#F00'>"+getpokeruser.name + " used "+ usermove.name ;
+	if(tempopponentenergy == Number(getpokeropponent.current_energy)){
+		summaray += "the attack missed the oppenent "+getpokeropponent.name + " energy left " + (Number(getpokeropponent.current_energy))+"</font> " ;		
+	}else
+		summaray +=" the attack hit the opponent " +getpokeropponent.name + " energy left " + (Number(getpokeropponent.current_energy))+"</font> " ;
+	
+	summaray +="<br> "+
+	"<font color='#09F'>"+ getpokeropponent.name+"" +  " attacks with "+ oppentntmove.name ;
+	if(tempuserenergy == Number(getpokeruser.current_energy)){
+		summaray +=" the attack missed the user " +getpokeruser.name + "energy left " + (Number(getpokeruser.current_energy))+"</font> ";
+	}else
+		summaray +=" the attack hit the user " +getpokeruser.name + " energy left " + (Number(getpokeruser.current_energy))+"</font> ";
+
+				
+	if(getpokeropponent.current_energy <= 0){
+		summaray = getpokeruser.name  + " killed the opponent " +getpokeropponent.name +"<br> game "+noofattempts+" win "+getpokeropponent.name+" ";
+		killed=true;
+		var appendstring = "";
+		// check the either poker is killed.
+		if(noofattempts == 4)
+		{
+			summaray = "Congradulation you won the match <br> Game Over!";
+			for (x=0;x<getpokeruser.moves.length;x++)
+			{
+				appendstring += "<li><input type=\"button\" value=\""+getpokeruser.moves[x].name+"\" ></li>";		
+			}
+		}else{
+		initializeCharachtor(sellectpokeman);	
+		++noofattempts;
+		healedused = false;
+		killed=false;
+		
+	
+		for (x=0;x<getpokeruser.moves.length;x++)
+		{
+			appendstring += "<li><input type=\"button\" value=\""+getpokeruser.moves[x].name+"\" onclick=\"hitPoker("+x+")\"></li>";		
+		}
+		
+		
+		getpokeruser.current_energy =100;
+	// setting the  energy bar size
+		if(100 * (getpokeruser.current_energy / getpokeruser.total_energy) > 40){
+			q = 0;
+		} else if((100 * (getpokeruser.current_energy / getpokeruser.total_energy) <= 40) && (100 * (getpokeruser.current_energy / getpokeruser.total_energy) > 15)){
+			q = 5;
+		} else if(((getpokeruser.current_energy / getpokeruser.total_energy) <= 15)){
+			q = 10;
+		}
+		if(getpokeruser.current_energy >100)
+		{
+			getpokeruser.current_energy =100;	
+		}
+		document.getElementById("playerHP").style.backgroundPosition = "-" + 2 * Math.round(100 - (100 * (getpokeruser.current_energy / getpokeruser.total_energy))) + "px -" + q + "px";
+		document.getElementById("userenergy").innerHTML = getpokeruser.current_energy +"/" +getpokeruser.total_energy;
+		
+		
+		}
+		appendstring += "<li><input type=\"button\" value=\"<<<<Back\" onclick=\"backtofight()\"\"></li>";
+		
+		document.getElementById("fightlist").innerHTML = appendstring;
+	
+		
+	}else if(getpokeruser.current_energy <= 0){
+		summaray = getpokeropponent.name  + " killed the user " +getpokeruser.name+"<br> Game Over!";
+		killed=true;
+		
+		var appendstring = "";
+	
+		for (x=0;x<getpokeruser.moves.length;x++)
+		{
+			appendstring += "<li><input type=\"button\" value=\""+getpokeruser.moves[x].name+"\"></li>";		
+		}
+		appendstring += "<li><input type=\"button\" value=\"<<<<Back\" onclick=\"backtofight()\"\"></li>";
+		document.getElementById("fightlist").innerHTML = appendstring;
+	}
+	
+	
+		//	document.getElementById("fightlist").childNodes[x1].onclick = false;
+	//}
+	
+	document.getElementById("gamestatehold").innerHTML="<h2>RESULTS "+noofturns+"</h2> <br>"+summaray;
+	noofturns++;
+}
+
+function rand(n){
+	if(n == null){
+		return Math.random();
+	} else if(typeof n == "number"){
+		return Math.round(Math.random() * n);
+	} else if(typeof n == "object"){
+		return n[Math.round(Math.random() * (n.length - 1))];
+	}
+}
+var healedused=false;
+function healup(){
+	if(!healedused && !killed)
+	{
+		healedused = true;
+	getpokeruser.current_energy +=15;
+	// setting the  energy bar size
+	if(100 * (getpokeruser.current_energy / getpokeruser.total_energy) > 40){
+		q = 0;
+	} else if((100 * (getpokeruser.current_energy / getpokeruser.total_energy) <= 40) && (100 * (getpokeruser.current_energy / getpokeruser.total_energy) > 15)){
+		q = 5;
+	} else if(((getpokeruser.current_energy / getpokeruser.total_energy) <= 15)){
+		q = 10;
+	}
+	if(getpokeruser.current_energy >100)
+	{
+		getpokeruser.current_energy =100;	
+	}
+	document.getElementById("playerHP").style.backgroundPosition = "-" + 2 * Math.round(100 - (100 * (getpokeruser.current_energy / getpokeruser.total_energy))) + "px -" + q + "px";
+	document.getElementById("userenergy").innerHTML = getpokeruser.current_energy +"/" +getpokeruser.total_energy;
+	}
+}
+
+function showFights()
+{
+	document.getElementById("optionList").style.display="none";
+	document.getElementById("fightlist").style.display="block";
+}
+function backtofight()
+{
+	document.getElementById("optionList").style.display="block";
+	document.getElementById("fightlist").style.display="none";
+}
+function flee(){
+		document.getElementById("gamestatehold").innerHTML ="<h1>RESULTS</h1> <br> User ran away";
+}
+
+function helpme(){
+
+		window.location = "help.html"
+}
+
+</script>
+
+
+
+
+</head>
+
+<!-- body part-->
+<body>
+
+<div style="min-width: 900px; max-width: 900px;margin: 0 auto; ">
+<div id="help" style="text-align:center" > <input type="button" value="HELP" onclick="helpme()"></div>
+<div id="game" style="text-align:center" >
+<div id="opponent">
+
+<div id="oppoHold"><h1><span id="opponentname"></span></h1><div id="oppoHP" style="background-position: 0px 0px;"></div><p id="opponentenergy">	HP 100 / 100</p></div></div>
+<img id="oppoSprite" src="images/default.png" alt="Fryno" title="Fryno" width="50px">
+<div id="player">
+
+<div id="playHold"><h1><span id="playername"></span></h1><div id="playerHP" style="background-position: 0px 0px;"></div><p id="userenergy">	HP 100 / 100</p></div></div>
+<img id="playerSprite" src="images/default.png" alt="Snark" title="Snark" width="50px">
+
+
+<div style="clear:both"></div>
+<div id="gamestate">
+<div id="gamestatehold" >
+<h2>RESULTS</h2></div>
+</div>
+
+<div id="options">
+
+<div id="optionHold"><ul id="optionList"><li><button id="fight" onclick="showFights()">Fight</button></li><li><button id="bag" onclick="healup()">Health</button></li><li><button id="flee" onclick="flee()">Flee</button></li></ul>
+<ul id="fightlist" style="display:none">
+	
+</ul>
+
+
+</div></div>
+</div>
+<input type="hidden" id="historyofhit">
+
+</script>
+
+
+
+
+<script>
+	initializepokman();
+	var username = prompt("Please enter User name","");
+	
+	var names = "";
+	for(x2=0;x2<pokearray.length;x2++)
+	{
+		names += x2+"-"+pokearray[x2].name+"\n";
+	}
+	
+	var sellectpokeman = prompt("Please select pokeman "+names,"");
+	
+	initializeCharachtor(sellectpokeman);
+</script>
+
+
+<div id="historyofhit">
+	
+</div>
+</div>
+</body>
+</html>
